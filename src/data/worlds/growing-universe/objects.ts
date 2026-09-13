@@ -13,4 +13,12 @@ export const universeObjects: WorldObject[] = [
       githubUsername: "luna-stargazer",
     },
   },
+  {
+    id: "crescent-moon",
+    asset: "/assets/worlds/growing-universe/crescent-moon.svg",
+    contributor: {
+      displayName: "Venuri Perera",
+      githubUsername: "venuri-p",
+    },
+  }
 ];
