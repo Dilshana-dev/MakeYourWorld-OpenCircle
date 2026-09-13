@@ -12,7 +12,7 @@ export const oceanPlacements: ObjectPlacement[] = [
     y: 28.0,
     scale: 0.9,
     rotation: 4,
-  },  
+  },
   {
     objectId: "research-submarine",
     segmentId: "ocean-03",
@@ -29,7 +29,6 @@ export const oceanPlacements: ObjectPlacement[] = [
     scale: 1.0,
     rotation: 0,
   },
-  // Phase F: Starter placements for new segments 04–10
   {
     id: "ocean-04-clownfish-1",
     objectId: "clownfish",
