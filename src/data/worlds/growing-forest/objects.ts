@@ -45,4 +45,13 @@ export const forestObjects: WorldObject[] = [
       githubUsername: "DileepaPRA",
     },
   },
+
+  {
+    id: "woodland-flower",
+    asset: "/assets/worlds/growing-forest/woodland-flower.svg",
+    contributor: {
+      displayName: "DilshanMolligoda😉",
+      githubUsername: "DNM2002",
+    },
+  },
 ];
