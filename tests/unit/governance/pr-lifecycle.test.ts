@@ -189,6 +189,104 @@ Closes #123
     expect(extractLinkedContributionIssueNumbers("> **Fixes #456 **")).toEqual([456]);
     expect(extractLinkedContributionIssueNumbers("> **Resolves #789 **")).toEqual([789]);
     expect(extractLinkedContributionIssueNumbers("_Closes #123__")).toEqual([123]);
+    expect(extractLinkedContributionIssueNumbers("**Closes #123**")).toEqual([123]);
+  });
+
+  it("TEST 8c: colon variants (Closes: #123, Fixes: #123, Resolves: #123) are resolved cleanly", () => {
+    expect(extractLinkedContributionIssueNumbers("Closes: #123")).toEqual([123]);
+    expect(extractLinkedContributionIssueNumbers("Fixes: #123")).toEqual([123]);
+    expect(extractLinkedContributionIssueNumbers("Resolves: #123")).toEqual([123]);
+    expect(extractLinkedContributionIssueNumbers("> **Closes: #123**")).toEqual([123]);
+    expect(extractLinkedContributionIssueNumbers("- Closes: #123")).toEqual([123]);
+  });
+
+  it("TEST 8d: GitHub issue URL variants (Closes https://github.com/.../issues/123) are resolved cleanly", () => {
+    expect(
+      extractLinkedContributionIssueNumbers(
+        "Closes https://github.com/ShenSandaru/MakeYourWorld-OpenCircle/issues/123"
+      )
+    ).toEqual([123]);
+    expect(
+      extractLinkedContributionIssueNumbers(
+        "Fixes https://github.com/ShenSandaru/MakeYourWorld-OpenCircle/issues/123"
+      )
+    ).toEqual([123]);
+    expect(
+      extractLinkedContributionIssueNumbers(
+        "Resolves https://github.com/ShenSandaru/MakeYourWorld-OpenCircle/issues/123"
+      )
+    ).toEqual([123]);
+    expect(
+      extractLinkedContributionIssueNumbers(
+        "Closes: https://github.com/ShenSandaru/MakeYourWorld-OpenCircle/issues/123"
+      )
+    ).toEqual([123]);
+    expect(
+      extractLinkedContributionIssueNumbers(
+        "Fixes: https://github.com/ShenSandaru/MakeYourWorld-OpenCircle/issues/123"
+      )
+    ).toEqual([123]);
+    expect(
+      extractLinkedContributionIssueNumbers(
+        "Resolves: https://github.com/ShenSandaru/MakeYourWorld-OpenCircle/issues/123"
+      )
+    ).toEqual([123]);
+    expect(
+      extractLinkedContributionIssueNumbers(
+        "Closes [https://github.com/ShenSandaru/MakeYourWorld-OpenCircle/issues/123]"
+      )
+    ).toEqual([123]);
+    expect(
+      extractLinkedContributionIssueNumbers(
+        "Closes [#123](https://github.com/ShenSandaru/MakeYourWorld-OpenCircle/issues/123)"
+      )
+    ).toEqual([123]);
+  });
+
+  it("TEST 8e: unreplaced template placeholders (#XXX, XXX) are ignored and do not produce issue numbers", () => {
+    expect(extractLinkedContributionIssueNumbers("Closes #XXX")).toEqual([]);
+    expect(extractLinkedContributionIssueNumbers("Closes: #XXX")).toEqual([]);
+    expect(extractLinkedContributionIssueNumbers("> **Closes #XXX**")).toEqual([]);
+    expect(extractLinkedContributionIssueNumbers("Closes XXX")).toEqual([]);
+
+    // When both an unreplaced placeholder and an actual issue reference appear (e.g. from template guidance)
+    const bodyWithBoth = `
+> **⚠️ Please replace \`XXX\` with your assigned issue number.**
+>
+> **Closes #XXX**
+
+Closes #220
+`;
+    expect(extractLinkedContributionIssueNumbers(bodyWithBoth)).toEqual([220]);
+  });
+
+  it("TEST 8f: unrelated '#123' text without closing keyword does NOT become a linked issue", () => {
+    expect(extractLinkedContributionIssueNumbers("This is PR #123")).toEqual([]);
+    expect(extractLinkedContributionIssueNumbers("Discussing issue #123 with team")).toEqual([]);
+    expect(extractLinkedContributionIssueNumbers("Commit #123 added")).toEqual([]);
+  });
+
+  it("TEST 8g: PR #229 format regression testing", () => {
+    // Regression test matching PR #229 formats (e.g. Closes: #220 or Closes <url>)
+    const pr229WithColon = `
+## 👤 Contributor Information
+- **GitHub Username:** @Shashini543
+- **Discord Username:** Shashini543
+
+## 🔴 IMPORTANT — LINK YOUR ISSUE
+Closes: #220
+`;
+    expect(extractLinkedContributionIssueNumbers(pr229WithColon)).toEqual([220]);
+
+    const pr229WithUrl = `
+## 👤 Contributor Information
+- **GitHub Username:** @Shashini543
+- **Discord Username:** Shashini543
+
+## 🔴 IMPORTANT — LINK YOUR ISSUE
+Closes https://github.com/ShenSandaru/MakeYourWorld-OpenCircle/issues/220
+`;
+    expect(extractLinkedContributionIssueNumbers(pr229WithUrl)).toEqual([220]);
   });
 
   it("TEST 9: Fixes #104 resolves the linked contribution issue number", () => {
