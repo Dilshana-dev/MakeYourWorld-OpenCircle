@@ -176,7 +176,7 @@ export function extractLinkedContributionIssueNumbers(body?: string | null): num
   }
 
   const pattern =
-    /(?:^|\s|\n|\[|\()\b(?:close[sd]?|closes|fix(?:e[sd])?|resolve[sd]?)\b\s*(?:\[)?\s*#(\d+)\s*(?:\])?(?=\s|\]|\)|\.|,|:|$)/gi;
+    /(?:^|\s|\n|\[|\(|\*\*|\*|__|_|>)\s*(?:close[sd]?|closes|fix(?:e[sd])?|resolve[sd]?)\b\s*(?:\[)?\s*#(\d+)\s*(?:\])?(?=\s|\]|\)|\.|,|:|\*|_|$)/gi;
 
   const issueNumbers = [...body.matchAll(pattern)]
     .map((match) => Number(match[1]))
