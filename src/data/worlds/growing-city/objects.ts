@@ -21,4 +21,12 @@ export const cityObjects: WorldObject[] = [
       githubUsername: "nethsaradws",
     },
   },
+  {
+    id: "paper-bicycle",
+    asset: "/assets/worlds/growing-city/paper-bicycle.svg",
+    contributor: {
+      displayName: "shashinibhagya",
+      githubUsername: "Shashini543",
+    },
+  },
 ];
