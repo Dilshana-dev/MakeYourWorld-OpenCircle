@@ -7,7 +7,7 @@
 
 export interface MergedPRNotificationParams {
   githubUsername: string;
-  discordUsername: string;
+  discordUsername?: string | null;
   prNumber: number;
   issueNumber?: number;
   prUrl?: string;
@@ -24,7 +24,7 @@ export interface ContributionIssueLike {
 export interface MergedPRDecisionParams {
   isMerged: boolean;
   hasIdempotencyMarker: boolean;
-  discordUsername: string | null;
+  discordUsername?: string | null;
 }
 
 export interface MergedPRDecisionResult {
@@ -176,7 +176,7 @@ export function extractLinkedContributionIssueNumbers(body?: string | null): num
   }
 
   const pattern =
-    /(?:^|\s|\n|\[|\(|\*\*|\*|__|_|>)\s*(?:close[sd]?|closes|fix(?:e[sd])?|resolve[sd]?)\b\s*(?:\[)?\s*#(\d+)\s*(?:\])?(?=\s|\]|\)|\.|,|:|\*|_|$)/gi;
+    /(?:^|\s|\n|\[|\(|\*\*|\*|__|_|>)\s*(?:close[sd]?|closes|fix(?:e[sd])?|resolve[sd]?)\b\s*(?::)?\s*(?:\[)?\s*(?:#|https?:\/\/(?:www\.)?github\.com\/[^\s\/]+\/[^\s\/]+\/issues\/)(\d+)\s*(?:\])?(?=\s|\]|\)|\.|,|:|\*|_|$)/gi;
 
   const issueNumbers = [...body.matchAll(pattern)]
     .map((match) => Number(match[1]))
@@ -229,13 +229,14 @@ export function buildMergedNotificationMessage(params: MergedPRNotificationParam
     footer: { text: string };
   };
 } {
-  const { githubUsername, discordUsername, prNumber, issueNumber, prUrl } = params;
+  const { githubUsername, prNumber, issueNumber, prUrl } = params;
+  const effectiveDiscord = params.discordUsername || "Not provided";
 
   const contentLines = [
     "🎉 **Contribution Merged!**",
     "",
     `**GitHub:** @${githubUsername}`,
-    `**Discord:** ${discordUsername}`,
+    `**Discord:** ${effectiveDiscord}`,
   ];
 
   if (typeof issueNumber === "number") {
@@ -248,7 +249,7 @@ export function buildMergedNotificationMessage(params: MergedPRNotificationParam
 
   const fields = [
     { name: "GitHub", value: `[@${githubUsername}](https://github.com/${githubUsername})`, inline: true },
-    { name: "Discord", value: discordUsername, inline: true },
+    { name: "Discord", value: effectiveDiscord, inline: true },
   ];
 
   if (typeof issueNumber === "number") {
@@ -294,15 +295,8 @@ export function shouldSendMergedPRNotification(
     };
   }
 
-  if (!params.discordUsername) {
-    return {
-      shouldSend: false,
-      reason: "No valid Discord username found in PR description. Skipping notification to prevent invalid/fake attribution.",
-    };
-  }
-
   return {
     shouldSend: true,
-    reason: "PR is merged, Discord username is present, and no prior notification has been sent.",
+    reason: "PR is merged and no prior notification has been sent.",
   };
 }

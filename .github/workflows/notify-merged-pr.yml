@@ -1,7 +1,7 @@
 name: Notify Discord on Merged Contribution PR
 
 on:
-  pull_request:
+  pull_request_target:
     types:
       - closed
 
@@ -34,7 +34,7 @@ jobs:
             const body = pr.body || "";
             const candidateIssueNumbers = (() => {
               const pattern =
-                /(?:^|\s|\n|\[|\(|\*\*|\*|__|_|>)\s*(?:close[sd]?|closes|fix(?:e[sd])?|resolve[sd]?)\b\s*(?:\[)?\s*#(\d+)\s*(?:\])?(?=\s|\]|\)|\.|,|:|\*|_|$)/gi;
+                /(?:^|\s|\n|\[|\(|\*\*|\*|__|_|>)\s*(?:close[sd]?|closes|fix(?:e[sd])?|resolve[sd]?)\b\s*(?::)?\s*(?:\[)?\s*(?:#|https?:\/\/(?:www\.)?github\.com\/[^\s\/]+\/[^\s\/]+\/issues\/)(\d+)\s*(?:\])?(?=\s|\]|\)|\.|,|:|\*|_|$)/gi;
 
               const matches = [...body.matchAll(pattern)]
                 .map((match) => Number(match[1]))
@@ -156,15 +156,14 @@ jobs:
               return cleaned;
             }
 
-            const discordUsername = extractDiscordUsername(body);
+            const rawDiscordUsername = extractDiscordUsername(body);
+            const discordUsername = rawDiscordUsername || "Not provided";
 
-            // 3. Guard: Do not send notification containing a fake/unknown Discord username
-            if (!discordUsername) {
-              console.warn(
-                `⚠️ Warning: No valid Discord username found in description for PR #${prNumber}. ` +
-                "Skipping Discord notification to prevent invalid attribution."
+            if (!rawDiscordUsername) {
+              console.log(
+                `ℹ️ Info: No valid Discord username found in description for PR #${prNumber}. ` +
+                "Proceeding with fallback 'Not provided'."
               );
-              return;
             }
 
             if (candidateIssueNumbers.length === 0) {
