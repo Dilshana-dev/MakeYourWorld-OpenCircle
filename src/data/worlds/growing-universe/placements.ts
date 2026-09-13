@@ -77,4 +77,12 @@ export const universePlacements: ObjectPlacement[] = [
     scale: 0.95,
     rotation: 8,
   },
+  {
+    objectId: "crescent-moon",
+    segmentId: "universe-02",
+    x: 45.0,
+    y: 55.0,
+    scale: 1.0,
+    rotation: 0,
+  },
 ];
