@@ -85,4 +85,12 @@ export const universePlacements: ObjectPlacement[] = [
     scale: 1.0,
     rotation: 0,
   },
+  {
+    objectId: "paper-satellite",
+    segmentId: "universe-01",
+    x: 45.0,
+    y: 55.0,
+    scale: 1.0,
+    rotation: 0,
+  },
 ];
