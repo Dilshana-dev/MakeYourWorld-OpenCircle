@@ -279,4 +279,16 @@ Closes #123
 
     expect(decision.shouldSend).toBe(true);
   });
+
+  it("TEST 21: notify-merged-pr workflow configuration uses pull_request_target with types [closed]", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const workflowPath = path.resolve(process.cwd(), ".github/workflows/notify-merged-pr.yml");
+    const workflowContent = fs.readFileSync(workflowPath, "utf-8");
+
+    // Must trigger on pull_request_target
+    expect(workflowContent).toMatch(/on:\s*\n\s*pull_request_target:\s*\n\s*types:\s*\n\s*-\s*closed/);
+    // Must NOT trigger on fork-restricted pull_request
+    expect(workflowContent).not.toMatch(/on:\s*\n\s*pull_request:\s*\n/);
+  });
 });
