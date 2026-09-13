@@ -71,7 +71,7 @@ Closes #123
     expect(decision.reason).toContain("not merged");
   });
 
-  it("TEST 3: missing or empty Discord username -> no invalid notification", () => {
+  it("TEST 3: missing or empty Discord username -> notification is still sent with 'Not provided' fallback", () => {
     const missingBody = `
 ## 👤 Contributor Information
 - **GitHub Username:** @contributor
@@ -86,11 +86,18 @@ Closes #123
       discordUsername: extracted,
     });
 
-    expect(decision.shouldSend).toBe(false);
-    expect(decision.reason).toContain("No valid Discord username found");
+    expect(decision.shouldSend).toBe(true);
+
+    const payload = buildMergedNotificationMessage({
+      githubUsername: "contributor",
+      discordUsername: extracted,
+      prNumber: 224,
+    });
+    expect(payload.content).toContain("**Discord:** Not provided");
+    expect(payload.embed.fields.find((f) => f.name === "Discord")?.value).toBe("Not provided");
   });
 
-  it("TEST 4: default template placeholder is rejected as invalid Discord username", () => {
+  it("TEST 4: default template placeholder is rejected as valid username but notification is still sent with fallback", () => {
     const defaultTemplateBody = `
 ## 👤 Contributor Information
 - **GitHub Username:** \`@your-github-username\`
@@ -105,7 +112,15 @@ Closes #123
       discordUsername: extracted,
     });
 
-    expect(decision.shouldSend).toBe(false);
+    expect(decision.shouldSend).toBe(true);
+
+    const payload = buildMergedNotificationMessage({
+      githubUsername: "your-github-username",
+      discordUsername: extracted,
+      prNumber: 224,
+    });
+    expect(payload.content).toContain("**Discord:** Not provided");
+    expect(payload.embed.fields.find((f) => f.name === "Discord")?.value).toBe("Not provided");
   });
 
   it("TEST 5: Markdown formatting variations in the Discord Username field", () => {
@@ -258,15 +273,60 @@ Closes #123
     expect(marker).not.toContain("104");
   });
 
-  it("TEST 19: missing Discord username still blocks notification", () => {
-    const decision = shouldSendMergedPRNotification({
+  it("TEST 19: missing or invalid Discord username never causes early return/skip", () => {
+    const missingDecision = shouldSendMergedPRNotification({
       isMerged: true,
       hasIdempotencyMarker: false,
       discordUsername: null,
     });
+    expect(missingDecision.shouldSend).toBe(true);
 
-    expect(decision.shouldSend).toBe(false);
-    expect(decision.reason).toContain("No valid Discord username found");
+    const malformedDecision = shouldSendMergedPRNotification({
+      isMerged: true,
+      hasIdempotencyMarker: false,
+      discordUsername: "",
+    });
+    expect(malformedDecision.shouldSend).toBe(true);
+  });
+
+  it("TEST 19b: malformed/missing Discord username does NOT affect linked issue validation", () => {
+    // Proves that regardless of whether Discord username is present, malformed, or null,
+    // contribution issue validation continues to behave identically and accurately
+    const validIssue = {
+      number: 104,
+      title: "[Good First Issue] Add a butterfly to Growing Forest",
+      body: "### Target World\nGrowing Forest\n### Contribution Slot\nA1",
+      labels: [{ name: "good first issue" }],
+    };
+    expect(isContributionIssue(validIssue)).toBe(true);
+
+    const invalidIssue = {
+      number: 999,
+      title: "Random general bug",
+      body: "Something went wrong",
+      labels: [],
+    };
+    expect(isContributionIssue(invalidIssue)).toBe(false);
+  });
+
+  it("TEST 19c: buildMergedNotificationMessage formats fallback 'Not provided' when username is null, undefined, or empty", () => {
+    const payloadNull = buildMergedNotificationMessage({
+      githubUsername: "author",
+      discordUsername: null,
+      prNumber: 224,
+      issueNumber: 104,
+    });
+    expect(payloadNull.content).toContain("**Discord:** Not provided");
+    expect(payloadNull.embed.fields.find((f) => f.name === "Discord")?.value).toBe("Not provided");
+
+    const payloadEmpty = buildMergedNotificationMessage({
+      githubUsername: "author",
+      discordUsername: "",
+      prNumber: 224,
+      issueNumber: 104,
+    });
+    expect(payloadEmpty.content).toContain("**Discord:** Not provided");
+    expect(payloadEmpty.embed.fields.find((f) => f.name === "Discord")?.value).toBe("Not provided");
   });
 
   it("TEST 20: valid merged contribution PRs with a valid issue still notify successfully", () => {
@@ -278,5 +338,17 @@ Closes #123
     });
 
     expect(decision.shouldSend).toBe(true);
+  });
+
+  it("TEST 21: notify-merged-pr workflow configuration uses pull_request_target with types [closed]", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const workflowPath = path.resolve(process.cwd(), ".github/workflows/notify-merged-pr.yml");
+    const workflowContent = fs.readFileSync(workflowPath, "utf-8");
+
+    // Must trigger on pull_request_target
+    expect(workflowContent).toMatch(/on:\s*\n\s*pull_request_target:\s*\n\s*types:\s*\n\s*-\s*closed/);
+    // Must NOT trigger on fork-restricted pull_request
+    expect(workflowContent).not.toMatch(/on:\s*\n\s*pull_request:\s*\n/);
   });
 });

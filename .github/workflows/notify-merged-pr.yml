@@ -1,7 +1,7 @@
 name: Notify Discord on Merged Contribution PR
 
 on:
-  pull_request:
+  pull_request_target:
     types:
       - closed
 
@@ -156,15 +156,14 @@ jobs:
               return cleaned;
             }
 
-            const discordUsername = extractDiscordUsername(body);
+            const rawDiscordUsername = extractDiscordUsername(body);
+            const discordUsername = rawDiscordUsername || "Not provided";
 
-            // 3. Guard: Do not send notification containing a fake/unknown Discord username
-            if (!discordUsername) {
-              console.warn(
-                `⚠️ Warning: No valid Discord username found in description for PR #${prNumber}. ` +
-                "Skipping Discord notification to prevent invalid attribution."
+            if (!rawDiscordUsername) {
+              console.log(
+                `ℹ️ Info: No valid Discord username found in description for PR #${prNumber}. ` +
+                "Proceeding with fallback 'Not provided'."
               );
-              return;
             }
 
             if (candidateIssueNumbers.length === 0) {
