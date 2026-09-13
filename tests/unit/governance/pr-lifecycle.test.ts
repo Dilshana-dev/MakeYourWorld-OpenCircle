@@ -164,6 +164,18 @@ Closes #123
     expect(extractLinkedContributionIssueNumbers(body)).toEqual([104]);
   });
 
+  it("TEST 8b: Closes #123 with markdown asterisks and blockquote variants are resolved cleanly", () => {
+    expect(extractLinkedContributionIssueNumbers("Closes #123")).toEqual([123]);
+    expect(extractLinkedContributionIssueNumbers("Closes #123 **")).toEqual([123]);
+    expect(extractLinkedContributionIssueNumbers("> **Closes #123 **")).toEqual([123]);
+    expect(extractLinkedContributionIssueNumbers("> **Closes #196 **")).toEqual([196]);
+    expect(extractLinkedContributionIssueNumbers("Fixes #123 **")).toEqual([123]);
+    expect(extractLinkedContributionIssueNumbers("Resolves #123 **")).toEqual([123]);
+    expect(extractLinkedContributionIssueNumbers("> **Fixes #456 **")).toEqual([456]);
+    expect(extractLinkedContributionIssueNumbers("> **Resolves #789 **")).toEqual([789]);
+    expect(extractLinkedContributionIssueNumbers("_Closes #123__")).toEqual([123]);
+  });
+
   it("TEST 9: Fixes #104 resolves the linked contribution issue number", () => {
     const body = "Fixes #104";
     expect(extractLinkedContributionIssueNumbers(body)).toEqual([104]);
@@ -184,9 +196,18 @@ Closes #123
     expect(extractLinkedContributionIssueNumbers("Just a normal update")).toEqual([]);
   });
 
-  it("TEST 13: multiple closing references are preserved as separate candidate issue numbers", () => {
+  it("TEST 13: multiple closing references are preserved as separate candidate issue numbers and reject ambiguous single-link rule", () => {
     const body = "Closes #104\nFixes #105";
-    expect(extractLinkedContributionIssueNumbers(body)).toEqual([104, 105]);
+    const candidates = extractLinkedContributionIssueNumbers(body);
+    expect(candidates).toEqual([104, 105]);
+    // According to the one-linked-issue rule, candidateIssueNumbers.length !== 1 must not proceed to notification
+    expect(candidates.length === 1).toBe(false);
+
+    // Also test multiple references when formatted with markdown bold
+    const markdownMultiple = "> **Closes #104 **\n> **Fixes #105 **";
+    const mdCandidates = extractLinkedContributionIssueNumbers(markdownMultiple);
+    expect(mdCandidates).toEqual([104, 105]);
+    expect(mdCandidates.length === 1).toBe(false);
   });
 
   it("TEST 14: contribution issue validation accepts the project's contribution issue pattern", () => {

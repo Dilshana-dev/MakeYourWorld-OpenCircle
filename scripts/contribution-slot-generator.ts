@@ -30,9 +30,10 @@ export { CONTRIBUTION_POOL_SIZE, MAX_CREATE_PER_RUN };
 export const TOTAL_POOL_SIZE = CONTRIBUTION_POOL_SIZE;
 
 /**
- * Master catalog of valid contribution concepts mapped to existing verified SVG assets.
+ * Historical legacy curated concepts mapped to segments 01-03.
+ * Preserved for backward compatibility and historical reference.
  */
-export const CURATED_CONCEPTS: CuratedConcept[] = [
+export const LEGACY_CURATED_CONCEPTS: CuratedConcept[] = [
   // Growing Forest
   {
     worldId: "growing-forest",
@@ -403,6 +404,20 @@ export const CURATED_CONCEPTS: CuratedConcept[] = [
     defaultSegmentId: "alien-03",
     segmentName: "Crystal Geysers",
   },
+];
+
+/**
+ * Active contribution concepts targeting segments 04–10 exclusively.
+ * All new contribution slots must be allocated from this catalog.
+ */
+export const ACTIVE_CONTRIBUTION_CONCEPTS: CuratedConcept[] = EXPANDED_CURATED_CONCEPTS;
+
+/**
+ * Master catalog of valid contribution concepts mapped to existing verified SVG assets.
+ * Contains both legacy concepts (01–03) and active expanded concepts (04–10).
+ */
+export const CURATED_CONCEPTS: CuratedConcept[] = [
+  ...LEGACY_CURATED_CONCEPTS,
   ...EXPANDED_CURATED_CONCEPTS,
 ];
 
@@ -434,7 +449,9 @@ export function calculateMissingSlotIds(
 }
 
 /**
- * Selects a fresh concept from the curated catalog that is not currently actively assigned.
+ * Selects a fresh concept from the active curated catalog (segments 04–10)
+ * that is not currently actively assigned.
+ * Enforces that new contribution slots never target legacy baseline segments 01–03.
  */
 export function selectFreshConcept(
   activeAssignments: { worldId: string; objectName: string }[],
@@ -444,9 +461,9 @@ export function selectFreshConcept(
     activeAssignments.map((a) => `${a.worldId.toLowerCase()}:${a.objectName.toLowerCase()}`)
   );
 
-  // 1. Try preferred world if specified
+  // 1. Try preferred world from ACTIVE_CONTRIBUTION_CONCEPTS (segments 04-10 only)
   if (preferredWorldId) {
-    const worldCandidates = CURATED_CONCEPTS.filter(
+    const worldCandidates = ACTIVE_CONTRIBUTION_CONCEPTS.filter(
       (c) =>
         c.worldId.toLowerCase() === preferredWorldId.toLowerCase() &&
         !activeKeys.has(`${c.worldId.toLowerCase()}:${c.objectName.toLowerCase()}`)
@@ -456,8 +473,8 @@ export function selectFreshConcept(
     }
   }
 
-  // 2. Try any unassigned concept from the catalog
-  const available = CURATED_CONCEPTS.filter(
+  // 2. Try any unassigned concept from ACTIVE_CONTRIBUTION_CONCEPTS (segments 04-10 only)
+  const available = ACTIVE_CONTRIBUTION_CONCEPTS.filter(
     (c) => !activeKeys.has(`${c.worldId.toLowerCase()}:${c.objectName.toLowerCase()}`)
   );
 
@@ -465,8 +482,8 @@ export function selectFreshConcept(
     return available[0];
   }
 
-  // 3. Fallback to round-robin if pool is completely saturated
-  return CURATED_CONCEPTS[0];
+  // 3. Fallback to round-robin from ACTIVE_CONTRIBUTION_CONCEPTS if pool is saturated
+  return ACTIVE_CONTRIBUTION_CONCEPTS[0];
 }
 
 export interface GeneratedSlotIssue {

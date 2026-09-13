@@ -4,9 +4,12 @@ import {
   selectFreshConcept,
   generateContributionSlotIssue,
   CURATED_CONCEPTS,
+  LEGACY_CURATED_CONCEPTS,
+  ACTIVE_CONTRIBUTION_CONCEPTS,
   CONTRIBUTION_POOL_SIZE,
   MAX_CREATE_PER_RUN,
   TOTAL_POOL_SIZE,
+  type CuratedConcept,
 } from "../../../scripts/contribution-slot-generator";
 import { parseIssueSlotBody, isGrowingWorldsContributionIssue } from "../../../scripts/issue-lifecycle-parser";
 import { computeReplenishment, ReplenishInput } from "../../../scripts/run-replenishment";
@@ -356,6 +359,94 @@ describe("Contribution Slot Pool Replenishment Generator Tests", () => {
         "CONTRIB-SLOT #99",
         "CONTRIB-SLOT #100",
       ]);
+    });
+  });
+
+  describe("Phase G: Segment 04–10 Contribution Slot Isolation & Legacy 01–03 Protection Suite", () => {
+    it("preserves legacy curated concepts (39 total) exclusively targeting segments 01–03", () => {
+      expect(LEGACY_CURATED_CONCEPTS.length).toBe(39);
+      for (const concept of LEGACY_CURATED_CONCEPTS) {
+        const segNum = parseInt(concept.defaultSegmentId.split("-").pop()!, 10);
+        expect(segNum).toBeGreaterThanOrEqual(1);
+        expect(segNum).toBeLessThanOrEqual(3);
+      }
+    });
+
+    it("verifies active contribution concepts (140 total) exclusively target segments 04–10", () => {
+      expect(ACTIVE_CONTRIBUTION_CONCEPTS.length).toBe(140);
+      for (const concept of ACTIVE_CONTRIBUTION_CONCEPTS) {
+        const segNum = parseInt(concept.defaultSegmentId.split("-").pop()!, 10);
+        expect(segNum).toBeGreaterThanOrEqual(4);
+        expect(segNum).toBeLessThanOrEqual(10);
+      }
+    });
+
+    it("ensures selectFreshConcept NEVER selects a concept from legacy segments 01–03", () => {
+      // Test across multiple iterative selections
+      const activeAssignments: { worldId: string; objectName: string }[] = [];
+      for (let i = 0; i < 50; i++) {
+        const fresh = selectFreshConcept(activeAssignments);
+        const segNum = parseInt(fresh.defaultSegmentId.split("-").pop()!, 10);
+        expect(segNum).toBeGreaterThanOrEqual(4);
+        expect(segNum).toBeLessThanOrEqual(10);
+        activeAssignments.push({ worldId: fresh.worldId, objectName: fresh.objectName });
+      }
+    });
+
+    it("ensures all 10 worlds can generate new contribution concepts from segments 04–10", () => {
+      const allWorldIds = [
+        "growing-forest",
+        "growing-universe",
+        "growing-ocean",
+        "growing-city",
+        "growing-village",
+        "growing-island",
+        "growing-farm",
+        "growing-campus",
+        "fantasy-world",
+        "alien-planet",
+      ];
+
+      for (const worldId of allWorldIds) {
+        const concept = selectFreshConcept([], worldId);
+        expect(concept.worldId).toBe(worldId);
+        const segNum = parseInt(concept.defaultSegmentId.split("-").pop()!, 10);
+        expect(segNum).toBeGreaterThanOrEqual(4);
+        expect(segNum).toBeLessThanOrEqual(10);
+      }
+    });
+
+    it("proves Forest Deer is never selected from legacy forest-03 when generating new slots", () => {
+      // If forest is preferred, it should select concepts like River Woodland Flower, Ridge Pine, Fern Deer (forest-06), etc.
+      // but never Forest Deer with defaultSegmentId === 'forest-03'
+      const forestConcepts: CuratedConcept[] = [];
+      const active: { worldId: string; objectName: string }[] = [];
+      for (let i = 0; i < 14; i++) {
+        const concept = selectFreshConcept(active, "growing-forest");
+        forestConcepts.push(concept);
+        active.push({ worldId: concept.worldId, objectName: concept.objectName });
+      }
+
+      for (const c of forestConcepts) {
+        expect(c.defaultSegmentId).not.toBe("forest-03");
+        expect(c.defaultSegmentId).not.toBe("forest-01");
+        expect(c.defaultSegmentId).not.toBe("forest-02");
+      }
+
+      // Verify Fern Deer in forest-06 is present in the active pool instead
+      const fernDeer = forestConcepts.find((c) => c.objectName === "Fern Deer");
+      expect(fernDeer).toBeDefined();
+      expect(fernDeer?.defaultSegmentId).toBe("forest-06");
+    });
+
+    it("maintains total CURATED_CONCEPTS catalog size of 179 and zero duplicates", () => {
+      expect(CURATED_CONCEPTS.length).toBe(179);
+      const keys = new Set<string>();
+      for (const c of CURATED_CONCEPTS) {
+        const key = `${c.worldId}:${c.objectName}`;
+        expect(keys.has(key)).toBe(false);
+        keys.add(key);
+      }
     });
   });
 });
