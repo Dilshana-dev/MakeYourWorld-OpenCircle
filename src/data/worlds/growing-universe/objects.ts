@@ -14,11 +14,11 @@ export const universeObjects: WorldObject[] = [
     },
   },
   {
-  id: "crescent-moon",
-  asset: "/assets/worlds/growing-universe/crescent-moon.svg",
-  contributor: {
-    displayName: "Venuri Perera",
-    githubUsername: "venuri-p",
-  },
-}
+    id: "crescent-moon",
+    asset: "/assets/worlds/growing-universe/crescent-moon.svg",
+    contributor: {
+      displayName: "Venuri Perera",
+      githubUsername: "venuri-p",
+    },
+  }
 ];

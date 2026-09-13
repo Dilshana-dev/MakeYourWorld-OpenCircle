@@ -78,11 +78,11 @@ export const universePlacements: ObjectPlacement[] = [
     rotation: 8,
   },
   {
-  objectId: "crescent-moon",
-  segmentId: "universe-02",
-  x: 45.0,
-  y: 55.0,
-  scale: 1.0,
-  rotation: 0,
-},
+    objectId: "crescent-moon",
+    segmentId: "universe-02",
+    x: 45.0,
+    y: 55.0,
+    scale: 1.0,
+    rotation: 0,
+  },
 ];
