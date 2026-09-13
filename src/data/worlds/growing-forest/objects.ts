@@ -30,11 +30,19 @@ export const forestObjects: WorldObject[] = [
     },
   },
   {
-  id: "forest-deer",
-  asset: "/assets/worlds/growing-forest/forest-deer.svg",
-  contributor: {
-    displayName: "Amila pathum",
-    githubUsername: "amila-pathum",
+    id: "forest-deer",
+    asset: "/assets/worlds/growing-forest/forest-deer.svg",
+    contributor: {
+      displayName: "Amila pathum",
+      githubUsername: "amila-pathum",
+    },
   },
-},
+  {
+    id: "mossy-rock",
+    asset: "/assets/worlds/growing-forest/mossy-rock.svg",
+    contributor: {
+      displayName: "Dileepa",
+      githubUsername: "DileepaPRA",
+    },
+  },
 ];
