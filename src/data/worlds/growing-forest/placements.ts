@@ -29,14 +29,7 @@ export const forestPlacements: ObjectPlacement[] = [
     scale: 1.10,
     rotation: -0.5,
   },
-  {
-    objectId: "red-mushroom",
-    segmentId: "forest-03",
-    x: 68.0,
-    y: 63.0,
-    scale: 1.0,
-    rotation: 0,
-  },
+ 
   // Phase F: Starter placements for new segments 04–10
   {
     id: "forest-04-pine-tree-1",
@@ -82,15 +75,6 @@ export const forestPlacements: ObjectPlacement[] = [
     y: 40.0,
     scale: 1.0,
     rotation: -1,
-  },
-  {
-    id: "forest-09-red-mushroom",
-    objectId: "red-mushroom",
-    segmentId: "forest-09",
-    x: 65.0,
-    y: 68.0,
-    scale: 1.0,
-    rotation: -2,
   },
   {
     id: "forest-10-pine-tree-1",
