@@ -586,7 +586,7 @@ Open \`src/data/worlds/${concept.worldId}/objects.ts\` and add your object entry
 
 \`\`\`typescript
 {
-  id: "${objectSlug}",
+  id: "${objectSlug}-<yourName>", // e.g. "${objectSlug}-alex" (lowercase kebab-case)
   asset: "/assets/worlds/${concept.worldId}/${concept.assetFile}",
   contributor: {
     displayName: "<Your Name>",
@@ -595,13 +595,13 @@ Open \`src/data/worlds/${concept.worldId}/objects.ts\` and add your object entry
 },
 \`\`\`
 
-> 💡 **Object ID Uniqueness:** If an object with \`id: "${objectSlug}"\` already exists in \`objects.ts\`, ensure your object ID is unique by adding a suffix or your username (e.g., \`"${objectSlug}-<your-username>"\` or \`"${segmentId}-${objectSlug}"\`). Make sure to use the exact same ID for \`objectId\` in Step 4.
+> 💡 **Object ID Format:** Always add \`-<yourName>\` to your object \`id\` in lowercase kebab-case (e.g., \`"${objectSlug}-alex"\`, \`"${objectSlug}-sewmini"\`). This guarantees your object has a unique identifier and prevents contributor labels from being overwritten. Use that exact matching ID for \`objectId\` in Step 4.
 
 Stage and commit this change:
 
 \`\`\`bash
 git add src/data/worlds/${concept.worldId}/objects.ts
-git commit -m "feat: register ${objectSlug} object"
+git commit -m "feat: register ${objectSlug}-<yourName> object"
 \`\`\`
 
 ---
@@ -612,7 +612,7 @@ Open \`src/data/worlds/${concept.worldId}/placements.ts\` and append your placem
 
 \`\`\`typescript
 {
-  objectId: "${objectSlug}",
+  objectId: "${objectSlug}-<yourName>",
   segmentId: "${segmentId}",
   x: 45.0,
   y: 55.0,
@@ -625,7 +625,7 @@ Stage and commit this change:
 
 \`\`\`bash
 git add src/data/worlds/${concept.worldId}/placements.ts
-git commit -m "feat: place ${objectSlug} in ${segmentId}"
+git commit -m "feat: place ${objectSlug}-<yourName> in ${segmentId}"
 \`\`\`
 
 ---

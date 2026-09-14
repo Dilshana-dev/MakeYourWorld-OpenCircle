@@ -14,7 +14,7 @@ Contributors only edit:
 3. `src/data/worlds/<worldId>/placements.ts` (3–8 lines)
 
 ## 2. Validation Checklist
-- **Object ID**: Kebab-case (`^[a-z0-9-]+$`).
+- **Object ID**: Kebab-case (`^[a-z0-9-]+$`). Always suffix with `-<yourName>` (e.g. `butterfly-alex`, `red-mushroom-sewmini`) to ensure global uniqueness and prevent label collisions.
 - **Asset Path**: Must start with `/assets/worlds/<worldId>/` and exist on disk.
 - **Coordinates**: `0 <= x <= 100`, `0 <= y <= 100`.
 - **Contributor Attribution**: Includes valid GitHub username and optional avatar / PR number.
