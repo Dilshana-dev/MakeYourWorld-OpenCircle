@@ -20,5 +20,13 @@ export const universeObjects: WorldObject[] = [
       displayName: "Venuri Perera",
       githubUsername: "venuri-p",
     },
-  }
+  },
+  {
+    id: "paper-satellite",
+    asset: "/assets/worlds/growing-universe/paper-satellite.svg",
+    contributor: {
+      displayName: "Anjana Jayamaha",
+      githubUsername: "AnjanaJayamaha",
+    },
+  },
 ];
