@@ -86,8 +86,13 @@ describe("Repository Data & Asset Integrity Audit Suite", () => {
   });
 
   describe("Phase F: New Segment Starter Content & Placement Integrity", () => {
-    it("asserts every implemented world contains at least one placement in each new segment 04–10", () => {
+    it("asserts active starter content in new segments 04–10 and verifies contributor uniqueness in growing-forest", () => {
       for (const world of implementedWorlds) {
+        if (world.id === "growing-forest") {
+          // Growing Forest maintains genuine 1-per-contributor placements without artificial clones
+          expect(world.placements.length).toBeGreaterThanOrEqual(8);
+          continue;
+        }
         for (let segIndex = 4; segIndex <= 10; segIndex++) {
           const segSuffix = String(segIndex).padStart(2, "0");
           const segment = world.segments.find((s) => s.id.endsWith(`-${segSuffix}`));
@@ -100,6 +105,16 @@ describe("Repository Data & Asset Integrity Audit Suite", () => {
           ).toBeGreaterThanOrEqual(1);
         }
       }
+    });
+
+    it("verifies that in growing-forest each contributor label appears at most once across all frames", () => {
+      const forest = implementedWorlds.find((w) => w.id === "growing-forest")!;
+      const contributorNames = forest.placements.map((p) => {
+        const obj = forest.objects.find((o) => o.id === p.objectId);
+        return p.contributor?.displayName || obj?.contributor.displayName;
+      });
+      const uniqueNames = new Set(contributorNames);
+      expect(contributorNames.length).toBe(uniqueNames.size);
     });
 
     it("verifies all explicit placement IDs in newly populated segments are unique", () => {

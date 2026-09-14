@@ -6,6 +6,7 @@ import { ContributorLabel } from "./ContributorLabel";
 export interface WorldObjectProps {
   objectDef: WorldObjectDef;
   placement: ObjectPlacement;
+  instanceId?: string;
 }
 
 /**
@@ -13,7 +14,7 @@ export interface WorldObjectProps {
  * Calculates responsive normalized CSS coordinates and positions the ContributorLabel automatically beneath it.
  * Uses physical paper drop shadows and subtle hover elevation.
  */
-export function WorldObject({ objectDef, placement }: WorldObjectProps) {
+export function WorldObject({ objectDef, placement, instanceId }: WorldObjectProps) {
   const style = calculatePositionStyle(
     placement.x,
     placement.y,
@@ -25,6 +26,7 @@ export function WorldObject({ objectDef, placement }: WorldObjectProps) {
   const placementTestId = placement.id
     ? `world-placement-${placement.id}`
     : `world-object-${objectDef.id}`;
+  const effectiveInstanceId = placement.id || instanceId || `${placement.segmentId}-${objectDef.id}`;
 
   return (
     <div
@@ -38,6 +40,9 @@ export function WorldObject({ objectDef, placement }: WorldObjectProps) {
       data-testid={placementTestId}
       data-object-id={objectDef.id}
       data-placement-id={placement.id}
+      data-instance-id={effectiveInstanceId}
+      data-segment-id={placement.segmentId}
+      title={`${objectDef.id} • Contributed by ${effectiveContributor.displayName}`}
     >
       <div className="relative flex items-center justify-center filter drop-shadow-[0_6px_6px_rgba(10,20,15,0.22)] transition-transform duration-200 hover:scale-105">
         <img
