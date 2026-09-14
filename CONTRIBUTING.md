@@ -99,7 +99,7 @@ git checkout -b contrib/<world-id>-<object-name>
 2. Open `src/data/worlds/<world-id>/objects.ts` and append your object to the array:
    ```typescript
    {
-     id: "butterfly",
+     id: "butterfly-<yourName>", // e.g. "butterfly-alex" (lowercase kebab-case)
      asset: "/assets/worlds/growing-forest/student-butterfly.svg",
      contributor: {
        displayName: "Your Name",
@@ -107,12 +107,15 @@ git checkout -b contrib/<world-id>-<object-name>
      },
    },
    ```
+
+   > 💡 **Object ID Format**: Always add `-<yourName>` to your object `id` in lowercase kebab-case (e.g., `"butterfly-alex"`, `"red-mushroom-sewmini"`). This ensures every contributor's object is uniquely identified and prevents contributor labels from being overwritten. Use that exact matching ID for `objectId` in Commit 2.
+
 3. Check status and create **Commit 1**:
    ```bash
    git status
    git diff
    git add src/data/worlds/<world-id>/objects.ts
-   git commit -m "feat: register butterfly object"
+   git commit -m "feat: register butterfly-<yourName> object"
    ```
 
 ---
@@ -123,7 +126,7 @@ git checkout -b contrib/<world-id>-<object-name>
 2. Append your placement entry specifying your assigned `segmentId` and coordinates `x` (0–100%) and `y` (0–100%):
    ```typescript
    {
-     objectId: "butterfly",
+     objectId: "butterfly-<yourName>",
      segmentId: "forest-01",
      x: 62.0,
      y: 42.0,
@@ -136,7 +139,7 @@ git checkout -b contrib/<world-id>-<object-name>
    git status
    git diff
    git add src/data/worlds/<world-id>/placements.ts
-   git commit -m "feat: place butterfly in forest-01"
+   git commit -m "feat: place butterfly-<yourName> in forest-01"
    ```
 
 4. Verify your commits:

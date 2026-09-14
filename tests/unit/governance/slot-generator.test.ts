@@ -13,6 +13,7 @@ import {
 } from "../../../scripts/contribution-slot-generator";
 import { parseIssueSlotBody, isGrowingWorldsContributionIssue } from "../../../scripts/issue-lifecycle-parser";
 import { computeReplenishment, ReplenishInput } from "../../../scripts/run-replenishment";
+import { modernizeIssueBodyInstruction } from "../../../scripts/update-open-issues";
 
 describe("Contribution Slot Pool Replenishment Generator Tests", () => {
   it("TEST 1: 20 open issues with 20 pool -> 0 missing slots", () => {
@@ -447,6 +448,50 @@ describe("Contribution Slot Pool Replenishment Generator Tests", () => {
         expect(keys.has(key)).toBe(false);
         keys.add(key);
       }
+    });
+
+    it("modernizes legacy issue bodies lacking -<yourName> instruction cleanly", () => {
+      const legacyBody = `
+#### 3. Register the Object (Commit 1)
+\`\`\`typescript
+{
+  id: "butterfly",
+  asset: "/assets/worlds/growing-forest/student-butterfly.svg",
+  contributor: {
+    displayName: "<Your Name>",
+    githubUsername: "<your-github-username>",
+  },
+},
+\`\`\`
+Stage and commit this change:
+\`\`\`bash
+git commit -m "feat: register butterfly object"
+\`\`\`
+#### 4. Place the Object in the World (Commit 2)
+\`\`\`typescript
+{
+  objectId: "butterfly",
+  segmentId: "forest-01",
+  x: 45.0,
+  y: 55.0,
+},
+\`\`\`
+\`\`\`bash
+git commit -m "feat: place butterfly in forest-01"
+\`\`\`
+`;
+
+      const result = modernizeIssueBodyInstruction(legacyBody);
+      expect(result.updated).toBe(true);
+      expect(result.newBody).toContain('id: "butterfly-<yourName>"');
+      expect(result.newBody).toContain('objectId: "butterfly-<yourName>"');
+      expect(result.newBody).toContain('feat: register butterfly-<yourName> object');
+      expect(result.newBody).toContain('feat: place butterfly-<yourName> in forest-01');
+      expect(result.newBody).toContain("Object ID Format");
+
+      // Idempotent test
+      const secondPass = modernizeIssueBodyInstruction(result.newBody);
+      expect(secondPass.updated).toBe(false);
     });
   });
 });
