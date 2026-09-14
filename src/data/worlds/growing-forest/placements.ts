@@ -32,8 +32,8 @@ export const forestPlacements: ObjectPlacement[] = [
   {
     objectId: "red-mushroom",
     segmentId: "forest-03",
-    x: 45.0,
-    y: 55.0,
+    x: 20.0,
+    y: 80.0,
     scale: 1.0,
     rotation: 0,
   },
