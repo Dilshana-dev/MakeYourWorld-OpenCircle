@@ -266,5 +266,31 @@ describe("Phase B: Multiple Object Instances in a Single Segment", () => {
       // Displays baseObject's contributor
       expect(html).toContain("Original Author");
     });
+
+    it("renders both Prateek's and Sewmini's mushrooms in growing-forest segment-03 simultaneously with distinct labels and unique instance IDs", () => {
+      const forest03Segment = growingForestWorld.segments.find((s) => s.id === "forest-03")!;
+      expect(forest03Segment).toBeDefined();
+
+      const html = renderToStaticMarkup(
+        <WorldSegment
+          segment={forest03Segment}
+          objects={growingForestWorld.objects}
+          placements={growingForestWorld.placements}
+        />
+      );
+
+      // Verify both contributor labels render
+      expect(html).toContain("Prateek Gupta");
+      expect(html).toContain("hello...i&#x27;m..🌝");
+
+      // Verify both object IDs are present in markup
+      expect(html).toContain('data-object-id="red-mushroom"');
+      expect(html).toContain('data-object-id="red-mushroom-sewmini"');
+
+      // Verify unique instance IDs
+      expect(html).toContain('data-instance-id="forest-03-red-mushroom-sewmini"');
+      expect(html).toContain('data-instance-id="forest-03-red-mushroom-');
+    });
   });
 });
+

@@ -40,13 +40,14 @@ export function WorldSegment({ segment, objects, placements }: WorldSegmentProps
           const objectDef = objectsMap.get(placement.objectId);
           if (!objectDef) return null;
 
-          const placementKey = placement.id || `${placement.objectId}-${idx}`;
+          const placementKey = placement.id || `${placement.segmentId}-${placement.objectId}-${idx}`;
 
           return (
             <WorldObject
               key={placementKey}
               objectDef={objectDef}
               placement={placement}
+              instanceId={placementKey}
             />
           );
         })}

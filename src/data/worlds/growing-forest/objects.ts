@@ -63,7 +63,7 @@ export const forestObjects: WorldObject[] = [
     },
   },
   {
-    id: "red-mushroom",
+    id: "red-mushroom-sewmini",
     asset: "/assets/worlds/growing-forest/red-mushroom.svg",
     contributor: {
       displayName: "hello...i'm..🌝",
