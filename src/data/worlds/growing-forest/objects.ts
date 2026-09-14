@@ -70,4 +70,12 @@ export const forestObjects: WorldObject[] = [
       githubUsername: "sewmini12",
     },
   },
+    {
+    id: "river-woodland-flower-sadali",
+    asset: "/assets/worlds/growing-forest/woodland-flower.svg",
+    contributor: {
+      displayName: "sadali",
+      githubUsername: "sewmini12",
+    },
+  },
 ];
