@@ -101,12 +101,15 @@ git checkout -b contrib/<world-id>-<object-name>
    {
      id: "butterfly",
      asset: "/assets/worlds/growing-forest/student-butterfly.svg",
-     contributor: {
-       displayName: "Your Name",
-       githubUsername: "your-github-username",
-     },
-   },
+      contributor: {
+        displayName: "Your Name",
+        githubUsername: "your-github-username",
+      },
+    },
    ```
+
+    > 💡 **Object ID Uniqueness**: If an object with `id: "butterfly"` already exists in `objects.ts` (e.g. added by another contributor), ensure your ID is unique by appending a suffix or your username (e.g. `"butterfly-<your-username>"` or `"canopy-butterfly"`). Then use that exact matching ID for `objectId` in Commit 2.
+
 3. Check status and create **Commit 1**:
    ```bash
    git status

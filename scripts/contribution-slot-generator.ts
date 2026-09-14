@@ -595,6 +595,8 @@ Open \`src/data/worlds/${concept.worldId}/objects.ts\` and add your object entry
 },
 \`\`\`
 
+> 💡 **Object ID Uniqueness:** If an object with \`id: "${objectSlug}"\` already exists in \`objects.ts\`, ensure your object ID is unique by adding a suffix or your username (e.g., \`"${objectSlug}-<your-username>"\` or \`"${segmentId}-${objectSlug}"\`). Make sure to use the exact same ID for \`objectId\` in Step 4.
+
 Stage and commit this change:
 
 \`\`\`bash
