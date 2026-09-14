@@ -22,7 +22,7 @@ export const forestObjects: WorldObject[] = [
     },
   },
   {
-    id: "red-mushroom",
+    id: "red-mushroom-1",
     asset: "/assets/worlds/growing-forest/red-mushroom.svg",
     contributor: {
       displayName: "Prateek Gupta",
@@ -63,7 +63,7 @@ export const forestObjects: WorldObject[] = [
     },
   },
   {
-    id: "red-mushroom",
+    id: "red-mushroom-2",
     asset: "/assets/worlds/growing-forest/red-mushroom.svg",
     contributor: {
       displayName: "hello...i'm..🌝",
