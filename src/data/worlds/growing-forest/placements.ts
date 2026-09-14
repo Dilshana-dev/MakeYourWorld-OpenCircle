@@ -30,7 +30,7 @@ export const forestPlacements: ObjectPlacement[] = [
     rotation: -0.5,
   },
   {
-    objectId: "red-mushroom-2",
+    objectId: "red-mushroom",
     segmentId: "forest-03",
     x: 68.0,
     y: 63.0,
@@ -57,7 +57,7 @@ export const forestPlacements: ObjectPlacement[] = [
     rotation: 3,
   },
   {
-    id: "forest-06-red-mushroom-1",
+    id: "forest-06-red-mushroom",
     objectId: "red-mushroom",
     segmentId: "forest-06",
     x: 35.0,
@@ -84,7 +84,7 @@ export const forestPlacements: ObjectPlacement[] = [
     rotation: -1,
   },
   {
-    id: "forest-09-red-mushroom-1",
+    id: "forest-09-red-mushroom",
     objectId: "red-mushroom",
     segmentId: "forest-09",
     x: 65.0,
