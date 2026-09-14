@@ -21,4 +21,12 @@ export const oceanObjects: WorldObject[] = [
       githubUsername: "OBagnell",
     },
   },
+  {
+    id: "research-submarine-bimsara",
+    asset: "/assets/worlds/growing-ocean/research-submarine.svg",
+    contributor: {
+      displayName: "Bimsara",
+      githubUsername: "Bimsara-Sanduneth",
+    },
+  },
 ];
