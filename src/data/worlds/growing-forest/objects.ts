@@ -62,4 +62,12 @@ export const forestObjects: WorldObject[] = [
       githubUsername: "DNM2002",
     },
   },
+  {
+    id: "red-mushroom",
+    asset: "/assets/worlds/growing-forest/red-mushroom.svg",
+    contributor: {
+      displayName: "<Your Name>",
+      githubUsername: "<your-github-username>",
+    },
+  },
 ];
