@@ -63,7 +63,7 @@ export const forestPlacements: ObjectPlacement[] = [
     rotation: -3,
   },
   {
-    objectId: "river-woodland-flower",
+    objectId: "river-woodland-flower-sadali",
     segmentId: "forest-04",
     x: 70.0,
     y: 56.0,

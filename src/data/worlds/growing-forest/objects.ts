@@ -71,7 +71,7 @@ export const forestObjects: WorldObject[] = [
     },
   },
     {
-    id: "river-woodland-flower",
+    id: "river-woodland-flower-sadali",
     asset: "/assets/worlds/growing-forest/woodland-flower.svg",
     contributor: {
       displayName: "sadali",
