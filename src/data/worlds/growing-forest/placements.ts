@@ -28,7 +28,7 @@ export const forestPlacements: ObjectPlacement[] = [
   y: 60.0,
   scale: 1.10,
   rotation: -0.5,
-},
+  },
   {
     objectId: "red-mushroom",
     segmentId: "forest-03",
@@ -120,9 +120,9 @@ export const forestPlacements: ObjectPlacement[] = [
   {
     objectId: "river-woodland-flower",
     segmentId: "forest-04",
-    x: 45.0,
-    y: 55.0,
-    scale: 1.0,
+    x: 70.0,
+    y: 56.0,
+    scale: 2.0,
     rotation: 0,
   },
 ];
