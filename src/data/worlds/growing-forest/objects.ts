@@ -78,4 +78,15 @@ export const forestObjects: WorldObject[] = [
       githubUsername: "sewmini12",
     },
   },
+
+  {
+  id: "crest-evergreen-akeel", // e.g. "crest-evergreen-alex" (lowercase kebab-case),
+  asset: "/assets/worlds/growing-forest/pine-tree.svg",
+  contributor: {
+    displayName: "Akeel Rishan",
+    githubUsername: "Akeel-Rishan",
+  },
+},
 ];
+
+
