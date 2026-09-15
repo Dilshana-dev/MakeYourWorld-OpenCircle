@@ -101,10 +101,18 @@ Closes #123
     const defaultTemplateBody = `
 ## 👤 Contributor Information
 - **GitHub Username:** \`@your-github-username\`
-- **Discord Username:** \`your-discord-username\`
+- **Discord Username:** \`@your-discord-username\`
 `;
     const extracted = extractDiscordUsername(defaultTemplateBody);
     expect(extracted).toBeNull();
+
+    // Also assert legacy placeholder without '@' is still safely rejected
+    const legacyTemplateBody = `
+## 👤 Contributor Information
+- **GitHub Username:** \`@your-github-username\`
+- **Discord Username:** \`your-discord-username\`
+`;
+    expect(extractDiscordUsername(legacyTemplateBody)).toBeNull();
 
     const decision = shouldSendMergedPRNotification({
       isMerged: true,
@@ -131,6 +139,7 @@ Closes #123
     const variation4 = "| **Discord Username** | `ShenSandaru` |";
     const variation5 = "### 💬 Discord Username\n\nShenSandaru\n";
     const variation6 = "- **Discord Username:** **`ShenSandaru`**";
+    const variation7 = "- **Discord Username:** `@ShenSandaru`";
 
     expect(extractDiscordUsername(variation1)).toBe("ShenSandaru");
     expect(extractDiscordUsername(variation2)).toBe("ShenSandaru");
@@ -138,6 +147,7 @@ Closes #123
     expect(extractDiscordUsername(variation4)).toBe("ShenSandaru");
     expect(extractDiscordUsername(variation5)).toBe("ShenSandaru");
     expect(extractDiscordUsername(variation6)).toBe("ShenSandaru");
+    expect(extractDiscordUsername(variation7)).toBe("ShenSandaru");
   });
 
   it("TEST 6: correct GitHub username comes from PR author login and cannot be spoofed by body", () => {

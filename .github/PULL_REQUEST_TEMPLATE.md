@@ -1,7 +1,7 @@
 ## 👤 Contributor Information
 
 - **GitHub Username:** `@your-github-username`
-- **Discord Username:** `your-discord-username`
+- **Discord Username:** `@your-discord-username`
 
 ---
 
