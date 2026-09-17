@@ -78,4 +78,12 @@ export const forestPlacements: ObjectPlacement[] = [
   scale: 1.0,
   rotation: 0,
 },
+{
+  objectId: "twilight-deer-dilshana",
+  segmentId: "forest-10",
+  x: 45.0,
+  y: 55.0,
+  scale: 1.0,
+  rotation: 0,
+},
 ];
