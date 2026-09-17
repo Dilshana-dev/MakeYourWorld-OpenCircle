@@ -87,6 +87,15 @@ export const forestObjects: WorldObject[] = [
     githubUsername: "Akeel-Rishan",
   },
 },
+
+{
+  id: "twilight-deer-dilshana", // e.g. "twilight-deer-alex" (lowercase kebab-case),
+  asset: "/assets/worlds/growing-forest/forest-deer.svg",
+  contributor: {
+    displayName: "Dilshana",
+    githubUsername: "Dilshana-dev",
+  },
+},
 ];
 
 
